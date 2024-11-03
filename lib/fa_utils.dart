@@ -7,6 +7,8 @@ export 'package:fa_utils/extension/list_extension.dart';
 export 'package:fa_utils/extension/map_extension.dart';
 export 'package:fa_utils/extension/string_extension.dart';
 
+export 'package:fa_utils/utils/responsive.dart';
+
 
 /// A Calculator.
 class Calculator {
