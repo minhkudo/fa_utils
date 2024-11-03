@@ -1,3 +1,5 @@
+import 'package:fa_utils/generic/generic_function.dart';
+
 extension DefaultMap<K, V> on Map<K, V> {
   V getOrElse(K key, V defaultValue) {
     if (containsKey(key)) {
@@ -52,5 +54,3 @@ extension BooleanMap<K, V> on Map<K, V> {
     }
   }
 }
-
-T? castValue<T>(x) => x is T ? x : null;
