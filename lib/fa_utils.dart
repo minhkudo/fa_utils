@@ -9,6 +9,7 @@ library fa_utils;
 //
 // export 'package:fa_utils/utils/responsive.dart';
 
+export 'package:sizer/sizer.dart';
 
 /// A Calculator.
 class Calculator {
