@@ -18,6 +18,7 @@ class _GalleryViewState extends State<GalleryView> {
   late ScrollController _scrollController;
   List<AssetPathEntity> _albums = [];
   List<AssetEntity> _assets = [];
+  Map<String, AssetEntity> _selected = {};
   final int _size = 36;
   int _page = 0;
   bool _loading = false;
@@ -81,7 +82,19 @@ class _GalleryViewState extends State<GalleryView> {
       shrinkWrap: true,
       padding: const EdgeInsets.all(8.0),
       itemCount: _assets.length,
-      itemBuilder: (context, index) => widget.mediaBuilder(context, _assets[index]),
+      itemBuilder: (context, index) => InkWell(
+        onTap: () => setState(() => _selected.containsKey(_assets[index].id)
+            ? _selected.remove(_assets[index].id)
+            : _selected.putIfAbsent(_assets[index].id, () => _assets[index])),
+        child: Container(
+          decoration: BoxDecoration(
+            border: (_selected.containsKey(_assets[index].id)) ? Border.all(color: Colors.blue, width: 3) : null,
+          ),
+          child: MediaTile(
+            assetEntity: _assets[index],
+          ),
+        ),
+      ),
     );
   }
 }
