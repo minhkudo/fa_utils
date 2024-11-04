@@ -6,9 +6,8 @@ import 'media_tile.dart';
 typedef MediaBuilder = Widget? Function(BuildContext, AssetEntity);
 
 class GalleryView extends StatefulWidget {
-  final MediaBuilder mediaBuilder;
 
-  const GalleryView({super.key, required this.mediaBuilder});
+  const GalleryView({super.key});
 
   @override
   State<GalleryView> createState() => _GalleryViewState();
