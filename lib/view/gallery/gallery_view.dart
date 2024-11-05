@@ -3,10 +3,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import 'media_tile.dart';
 
-typedef MediaBuilder = Widget? Function(BuildContext, AssetEntity);
-
 class GalleryView extends StatefulWidget {
-
   const GalleryView({super.key});
 
   @override
@@ -27,7 +24,9 @@ class _GalleryViewState extends State<GalleryView> {
   void initState() {
     _loading = true;
     super.initState();
-    requestPermission();
+    Future.wait([
+      requestPermission(),
+    ]).whenComplete(() => fetchMedia());
 
     _scrollController = ScrollController()
       ..addListener(() {
@@ -38,12 +37,12 @@ class _GalleryViewState extends State<GalleryView> {
       });
   }
 
-  void requestPermission() async {
+  Future<void> requestPermission() async {
     var permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth) {
       PhotoManager.openSetting();
     } else {
-      List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(onlyAll: true);
+      List<AssetPathEntity> albums = await PhotoManager.getAssetPathList();
 
       setState(() {
         _albums = albums;
@@ -81,16 +80,18 @@ class _GalleryViewState extends State<GalleryView> {
       shrinkWrap: true,
       padding: const EdgeInsets.all(8.0),
       itemCount: _assets.length,
-      itemBuilder: (context, index) => InkWell(
-        onTap: () => setState(() => _selected.containsKey(_assets[index].id)
-            ? _selected.remove(_assets[index].id)
-            : _selected.putIfAbsent(_assets[index].id, () => _assets[index])),
-        child: Container(
-          decoration: BoxDecoration(
-            border: (_selected.containsKey(_assets[index].id)) ? Border.all(color: Colors.blue, width: 3) : null,
-          ),
-          child: MediaTile(
-            assetEntity: _assets[index],
+      itemBuilder: (context, index) => Material(
+        child: InkWell(
+          onTap: () => setState(() => _selected.containsKey(_assets[index].id)
+              ? _selected.remove(_assets[index].id)
+              : _selected.putIfAbsent(_assets[index].id, () => _assets[index])),
+          child: Container(
+            decoration: BoxDecoration(
+              border: (_selected.containsKey(_assets[index].id)) ? Border.all(color: Colors.blue, width: 3) : null,
+            ),
+            child: MediaTile(
+              assetEntity: _assets[index],
+            ),
           ),
         ),
       ),
