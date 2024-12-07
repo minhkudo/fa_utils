@@ -25,7 +25,14 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const GalleryView(),
+      home: GalleryView(
+        pickMediaItems: (assetEntities) {
+          print('assetEntities ${assetEntities.length}');
+          assetEntities.forEach((element) {
+            print('elemenet ${element.id}');
+          });
+        },
+      ),
     );
   }
 }
