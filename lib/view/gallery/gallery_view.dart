@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:provider/provider.dart';
 
+import 'media_selection_provider.dart';
 import 'media_tile.dart';
-
-typedef PickMediaItems = Function(List<AssetEntity> assetEntities);
 
 class GalleryView extends StatefulWidget {
   final bool isMultipleImage;
-  final PickMediaItems pickMediaItems;
 
-  const GalleryView({super.key, this.isMultipleImage = false, required this.pickMediaItems});
+  const GalleryView({super.key, this.isMultipleImage = false});
 
   @override
   State<GalleryView> createState() => _GalleryViewState();
 }
 
 class _GalleryViewState extends State<GalleryView> {
+  late MediaSelectionProvider _mediaSelectionProvider;
   late ScrollController _scrollController;
   late bool _isMultipleImage;
 
@@ -37,6 +37,8 @@ class _GalleryViewState extends State<GalleryView> {
     ]).whenComplete(() => fetchMedia());
 
     _isMultipleImage = widget.isMultipleImage;
+
+    _mediaSelectionProvider = Provider.of<MediaSelectionProvider>(context);
 
     _scrollController = ScrollController()
       ..addListener(() {
@@ -92,7 +94,6 @@ class _GalleryViewState extends State<GalleryView> {
             list = [];
           }
         }
-        widget.pickMediaItems(list);
       });
 
   bool checkSelected(AssetEntity assetEntity) {
@@ -119,10 +120,12 @@ class _GalleryViewState extends State<GalleryView> {
       itemCount: _assets.length,
       itemBuilder: (context, index) => Material(
         child: InkWell(
-          onTap: () => pickMedia(_assets[index]),
+          onTap: () => _mediaSelectionProvider.pickMedia(_assets[index]), //pickMedia(_assets[index]),
           child: Container(
             decoration: BoxDecoration(
-              border: (checkSelected(_assets[index])) ? Border.all(color: Colors.blue, width: 3) : null,
+              border: (_mediaSelectionProvider.isSelected(_assets[index]))
+                  ? Border.all(color: Colors.blue, width: 3)
+                  : null,
             ),
             child: MediaTile(
               assetEntity: _assets[index],
