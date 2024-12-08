@@ -1,16 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-class MediaSelectionProvider extends ChangeNotifier {
+class MediaSelectionController {
   final bool isMultipleImage;
   final Map<String, AssetEntity> _multipleSelected = {};
   AssetEntity? _singleSelected;
 
-  MediaSelectionProvider({this.isMultipleImage = false});
+  MediaSelectionController({this.isMultipleImage = false});
 
-  Map<String, AssetEntity> get multipleSelected => _multipleSelected;
-  AssetEntity? get singleSelected => _singleSelected;
+  // Lấy danh sách ảnh đã chọn
+  List<AssetEntity> get selectedAssets {
+    return isMultipleImage
+        ? _multipleSelected.values.toList()
+        : _singleSelected != null
+        ? [_singleSelected!]
+        : [];
+  }
 
+  // Kiểm tra xem ảnh có được chọn hay không
+  bool isSelected(AssetEntity assetEntity) {
+    if (isMultipleImage) {
+      return _multipleSelected.containsKey(assetEntity.id);
+    } else {
+      return _singleSelected?.id == assetEntity.id;
+    }
+  }
+
+  // Phương thức để chọn hoặc bỏ chọn media
   void pickMedia(AssetEntity assetEntity) {
     if (isMultipleImage) {
       // Toggle the selection for multiple images
@@ -26,19 +42,6 @@ class MediaSelectionProvider extends ChangeNotifier {
       } else {
         _singleSelected = null;
       }
-    }
-    notifyListeners();
-  }
-
-  List<AssetEntity> get selectedAssets {
-    return isMultipleImage ? _multipleSelected.values.toList() : _singleSelected != null ? [_singleSelected!] : [];
-  }
-
-  bool isSelected(AssetEntity assetEntity) {
-    if (isMultipleImage) {
-      return _multipleSelected.containsKey(assetEntity.id);
-    } else {
-      return _singleSelected?.id == assetEntity.id;
     }
   }
 }

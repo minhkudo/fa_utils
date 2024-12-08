@@ -1,5 +1,7 @@
 import 'package:fa_utils/view/gallery/gallery_view.dart';
+import 'package:fa_utils/view/gallery/media_selection_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,14 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: GalleryView(
-        pickMediaItems: (assetEntities) {
-          print('assetEntities ${assetEntities.length}');
-          assetEntities.forEach((element) {
-            print('elemenet ${element.id}');
-          });
-        },
-      ),
+      home: GalleryView(mediaSelectionController: MediaSelectionController()),
     );
   }
 }

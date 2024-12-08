@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 
-import 'media_selection_provider.dart';
+import 'media_selection_controller.dart';
 import 'media_tile.dart';
 
 class GalleryView extends StatefulWidget {
   final bool isMultipleImage;
+  final MediaSelectionController mediaSelectionController;
 
-  const GalleryView({super.key, this.isMultipleImage = false});
+  const GalleryView({super.key, this.isMultipleImage = false, required this.mediaSelectionController});
 
   @override
   State<GalleryView> createState() => _GalleryViewState();
 }
 
 class _GalleryViewState extends State<GalleryView> {
-  late MediaSelectionProvider _mediaSelectionProvider;
   late ScrollController _scrollController;
   late bool _isMultipleImage;
+  late MediaSelectionController _mediaSelectionController;
+
 
   List<AssetPathEntity> _albums = [];
   List<AssetEntity> _assets = [];
@@ -37,8 +39,7 @@ class _GalleryViewState extends State<GalleryView> {
     ]).whenComplete(() => fetchMedia());
 
     _isMultipleImage = widget.isMultipleImage;
-
-    _mediaSelectionProvider = Provider.of<MediaSelectionProvider>(context);
+    _mediaSelectionController = widget.mediaSelectionController;
 
     _scrollController = ScrollController()
       ..addListener(() {
@@ -120,10 +121,10 @@ class _GalleryViewState extends State<GalleryView> {
       itemCount: _assets.length,
       itemBuilder: (context, index) => Material(
         child: InkWell(
-          onTap: () => _mediaSelectionProvider.pickMedia(_assets[index]), //pickMedia(_assets[index]),
+          onTap: () => _mediaSelectionController.pickMedia(_assets[index]), //pickMedia(_assets[index]),
           child: Container(
             decoration: BoxDecoration(
-              border: (_mediaSelectionProvider.isSelected(_assets[index]))
+              border: (_mediaSelectionController.isSelected(_assets[index]))
                   ? Border.all(color: Colors.blue, width: 3)
                   : null,
             ),
