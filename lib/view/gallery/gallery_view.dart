@@ -7,8 +7,9 @@ import 'media_tile.dart';
 
 class GalleryView extends StatefulWidget {
   final MediaSelectionController mediaSelectionController;
+  final int size;
 
-  const GalleryView({super.key, required this.mediaSelectionController});
+  const GalleryView({super.key, required this.mediaSelectionController, this.size = 36});
 
   @override
   State<GalleryView> createState() => _GalleryViewState();
@@ -21,7 +22,7 @@ class _GalleryViewState extends State<GalleryView> {
   List<AssetPathEntity> _albums = [];
   List<AssetEntity> _assets = [];
 
-  final int _size = 36;
+  late int _size;
   int _page = 0;
   bool _loading = false;
   bool _hasMoreData = true;
@@ -34,6 +35,7 @@ class _GalleryViewState extends State<GalleryView> {
       requestPermission(),
     ]).whenComplete(() => fetchMedia());
 
+    _size = widget.size;
     _mediaSelectionController = widget.mediaSelectionController;
 
     _scrollController = ScrollController()
@@ -90,7 +92,8 @@ class _GalleryViewState extends State<GalleryView> {
       itemCount: _assets.length,
       itemBuilder: (context, index) => Material(
         child: InkWell(
-          onTap: () => setState(() => _mediaSelectionController.pickMedia(_assets[index])), //pickMedia(_assets[index]),
+          onTap: () => setState(() => _mediaSelectionController.pickMedia(_assets[index])),
+          //pickMedia(_assets[index]),
           child: Container(
             decoration: BoxDecoration(
               border: (_mediaSelectionController.isSelected(_assets[index]))
