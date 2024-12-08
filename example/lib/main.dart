@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: GalleryView(mediaSelectionController: MediaSelectionController()),
+      home: GalleryView(mediaSelectionController: MediaSelectionController(isMultipleImage: true)),
     );
   }
 }
