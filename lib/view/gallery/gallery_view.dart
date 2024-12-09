@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:provider/provider.dart';
 
 import 'media_selection_controller.dart';
 import 'media_tile.dart';

@@ -13,7 +13,7 @@ dependencies:
 
   json_annotation: ^4.8.1
   cached_network_image: ^3.2.3
-  photo_manager: ^3.6.1
+  photo_manager: 2.8.2
   photo_manager_image_provider: ^1.1.1
 
 dev_dependencies:

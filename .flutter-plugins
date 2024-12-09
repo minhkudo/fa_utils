@@ -1,8 +1,13 @@
 # This is a generated file; do not edit or check into version control.
+camera=/Users/kudo/.pub-cache/hosted/pub.dev/camera-0.10.5+5/
+camera_android=/Users/kudo/.pub-cache/hosted/pub.dev/camera_android-0.10.8+13/
+camera_avfoundation=/Users/kudo/.pub-cache/hosted/pub.dev/camera_avfoundation-0.9.13+7/
+camera_web=/Users/kudo/.pub-cache/hosted/pub.dev/camera_web-0.3.2+2/
+flutter_plugin_android_lifecycle=/Users/kudo/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/
 path_provider=/Users/kudo/.pub-cache/hosted/pub.dev/path_provider-2.1.1/
 path_provider_android=/Users/kudo/.pub-cache/hosted/pub.dev/path_provider_android-2.2.1/
 path_provider_foundation=/Users/kudo/.pub-cache/hosted/pub.dev/path_provider_foundation-2.3.1/
 path_provider_linux=/Users/kudo/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1/
 path_provider_windows=/Users/kudo/.pub-cache/hosted/pub.dev/path_provider_windows-2.2.1/
-photo_manager=/Users/kudo/.pub-cache/hosted/pub.dev/photo_manager-3.6.1/
+photo_manager=/Users/kudo/.pub-cache/hosted/pub.dev/photo_manager-2.8.2/
 sqflite=/Users/kudo/.pub-cache/hosted/pub.dev/sqflite-2.2.8+4/
