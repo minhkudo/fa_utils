@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fa_utils/generic/generic_function.dart';
 
 extension DefaultMap<K, V> on Map<K, V> {
@@ -54,3 +56,14 @@ extension BooleanMap<K, V> on Map<K, V> {
     }
   }
 }
+
+extension ObjectMap<T> on Map<String, dynamic> {
+  T? objectVal(String key, Function(Map<String, dynamic>) fromJson, {T? defaultValue}) {
+    if (containsKey(key)) {
+      return fromJson(json.decode(this[key]));
+    } else {
+      return defaultValue;
+    }
+  }
+}
+
