@@ -88,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           controller: _controller,
           begin: Duration(seconds: 12),
           end: Duration(seconds: 1),
+          autoStart: true,
           builder: (state, remaining) {
             return Column(
               children: [

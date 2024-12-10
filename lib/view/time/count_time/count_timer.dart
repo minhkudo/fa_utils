@@ -3,28 +3,30 @@ import 'count_timer_controller.dart';
 import 'count_timer_remaining_time.dart';
 
 class CountTimer extends StatefulWidget {
-  final CountTimerController controller;
+  final CountTimerController? controller;
   final Duration begin;
   final Duration end;
   final CountTimerState initialState;
   final CountTimerInterval interval;
   final Widget Function(CountTimerState, CountTimerRemainingTime) builder;
+  final bool autoStart;
 
   const CountTimer(
       {super.key,
-      required this.controller,
+      this.controller,
       required this.builder,
       required this.begin,
       required this.end,
       this.initialState = CountTimerState.reset,
-      this.interval = CountTimerInterval.milliseconds});
+      this.interval = CountTimerInterval.milliseconds,
+      this.autoStart = false});
 
   @override
   State<CountTimer> createState() => _CountTimerState();
 }
 
 class _CountTimerState extends State<CountTimer> with SingleTickerProviderStateMixin {
-  late CountTimerController _controller = widget.controller;
+  late CountTimerController _controller = widget.controller ?? CountTimerController();
 
   @override
   void initState() {
@@ -37,6 +39,10 @@ class _CountTimerState extends State<CountTimer> with SingleTickerProviderStateM
       initialState: widget.initialState,
       interval: widget.interval,
     );
+
+    if (widget.autoStart) {
+      _controller.start();
+    }
   }
 
   @override
