@@ -2,7 +2,6 @@ import 'package:fa_utils/view/gallery/gallery_view.dart';
 import 'package:fa_utils/view/gallery/media_selection_controller.dart';
 import 'package:fa_utils/view/time/count_timer.dart';
 import 'package:fa_utils/view/time/count_timer_controller.dart';
-import 'package:fa_utils/view/time/test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -93,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       body: CountTimer(
           controller: _controller,
           builder: (state, remaining) {
-            print('alo');
             return Column(
               children: [
                 Text("${state.name}", style: TextStyle(fontSize: 24.0)),
