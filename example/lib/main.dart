@@ -57,12 +57,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   int _counter = 0;
 
-  late CountTimerController _controller = CountTimerController(
-      vsync: this,
-      begin: Duration(seconds: 12),
-      end: Duration(seconds: 1),
-      initialState: CountTimerState.reset,
-      interval: CountTimerInterval.milliseconds);
+  late CountTimerController _controller = CountTimerController();
 
   void _incrementCounter() {
     setState(() {
@@ -91,6 +86,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       ),
       body: CountTimer(
           controller: _controller,
+          begin: Duration(seconds: 12),
+          end: Duration(seconds: 1),
           builder: (state, remaining) {
             return Column(
               children: [

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'count_timer_remaining_time.dart';
 
-/// State for CustomTimer.
 enum CountTimerState { reset, paused, counting, finished }
-
-// Update interval for CustomTimer.
 enum CountTimerInterval { minutes, seconds, milliseconds }
 
 class CountTimerController extends ChangeNotifier {
-  /// The [TickerProvider] for the current context.
-  final TickerProvider vsync;
+  late TickerProvider vsync;
 
   /// The start of the timer.
   late Duration _begin;
@@ -37,19 +32,16 @@ class CountTimerController extends ChangeNotifier {
   }
 
   /// Defines the initial state of the timer. By default it is `CountTimerState.reset`.
-  final CountTimerState initialState;
+  late CountTimerState initialState;
 
   /// The update interval of the timer. By default it is `CustomTimerUpdateInterval.milliseconds`.
-  CountTimerInterval interval;
+  late CountTimerInterval interval;
 
   late AnimationController _animationController;
   late Animation<int> _animation;
 
-  late ValueNotifier<CountTimerState> _state =
-      ValueNotifier(initialState != CountTimerState.paused ? initialState : CountTimerState.reset);
-
-  late ValueNotifier<CountTimerRemainingTime> _remaining =
-      ValueNotifier(CountTimerRemainingTime(duration: initialState == CountTimerState.finished ? end : begin));
+  late ValueNotifier<CountTimerState> _state;
+  late ValueNotifier<CountTimerRemainingTime> _remaining;
 
   /// Current state of the timer.
   ValueNotifier<CountTimerState> get state => _state;
@@ -57,35 +49,47 @@ class CountTimerController extends ChangeNotifier {
   /// Current remaining time.
   ValueNotifier<CountTimerRemainingTime> get remaining => _remaining;
 
-  /// Controls the state of the timer.
-  /// Allows you to execute the `start()`, `pause()`, `reset()` and `finish()` functions. It also allows you to get or subscribe to the current `state` and `remaining` time.
-  /// Remember to dispose when you are no longer using it.
-  CountTimerController({
-    required this.vsync,
+  /// Initialize the timer with required parameters.
+  void initialize({
+    required TickerProvider vsync,
     required Duration begin,
     required Duration end,
-    this.initialState = CountTimerState.reset,
-    this.interval = CountTimerInterval.milliseconds,
+    CountTimerState initialState = CountTimerState.reset,
+    CountTimerInterval interval = CountTimerInterval.milliseconds,
   }) {
+    // Khởi tạo vsync
+    this.vsync = vsync;
+
+    // Khởi tạo các giá trị còn lại
     _begin = begin;
     _end = end;
+    this.initialState = initialState;
+    this.interval = interval;
+
+    // Khởi tạo AnimationController
     _animationController = AnimationController(vsync: vsync);
     _init();
 
-    if (initialState == CountTimerState.finished)
+    // Khởi tạo _state và _remaining
+    _state = ValueNotifier(initialState != CountTimerState.paused ? initialState : CountTimerState.reset);
+    _remaining = ValueNotifier(CountTimerRemainingTime(duration: initialState == CountTimerState.finished ? _end : _begin));
+
+    if (initialState == CountTimerState.finished) {
       finish();
-    else if (initialState == CountTimerState.counting) start();
+    } else if (initialState == CountTimerState.counting) {
+      start();
+    }
 
     _animation.addListener(_listener);
     _animation.addStatusListener(_statusListener);
   }
 
   void _init() {
-    _animationController.duration = Duration(milliseconds: (begin - end).inMilliseconds.abs());
-
+    // Khởi tạo AnimationController với thời gian (duration)
+    _animationController.duration = Duration(milliseconds: (_begin - _end).inMilliseconds.abs());
     final curvedAnimation = CurvedAnimation(parent: _animationController, curve: Curves.linear);
 
-    _animation = IntTween(begin: begin.inMilliseconds, end: end.inMilliseconds).animate(curvedAnimation);
+    _animation = IntTween(begin: _begin.inMilliseconds, end: _end.inMilliseconds).animate(curvedAnimation);
   }
 
   void _listener() {
@@ -97,7 +101,8 @@ class CountTimerController extends ChangeNotifier {
       update = true;
     else if (next.seconds != remaining.value.seconds && interval == CountTimerInterval.seconds)
       update = true;
-    else if (next.minutes != remaining.value.minutes && interval == CountTimerInterval.minutes) update = true;
+    else if (next.minutes != remaining.value.minutes && interval == CountTimerInterval.minutes)
+      update = true;
 
     if (update) {
       _remaining.value = next;
@@ -150,10 +155,10 @@ class CountTimerController extends ChangeNotifier {
 
   /// Function to move the current time.
   void jumpTo(Duration duration) {
-    final isCountUp = begin < end;
+    final isCountUp = _begin < _end;
 
-    final a = isCountUp ? begin.inMilliseconds : end.inMilliseconds;
-    final b = isCountUp ? end.inMilliseconds : begin.inMilliseconds;
+    final a = isCountUp ? _begin.inMilliseconds : _end.inMilliseconds;
+    final b = isCountUp ? _end.inMilliseconds : _begin.inMilliseconds;
 
     final value = (duration.inMilliseconds - a) / (b - a);
     final next = isCountUp ? value : 1.0 - value;
