@@ -1,5 +1,8 @@
 import 'package:fa_utils/view/gallery/gallery_view.dart';
 import 'package:fa_utils/view/gallery/media_selection_controller.dart';
+import 'package:fa_utils/view/time/count_timer.dart';
+import 'package:fa_utils/view/time/count_timer_controller.dart';
+import 'package:fa_utils/view/time/test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +30,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: GalleryView(mediaSelectionController: MediaSelectionController(isMultipleImage: true)),
+      home: MyHomePage(
+        title: 'Count Time',
+      ),
     );
   }
 }
@@ -50,8 +55,15 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   int _counter = 0;
+
+  late CountTimerController _controller = CountTimerController(
+      vsync: this,
+      begin: Duration(seconds: 12),
+      end: Duration(seconds: 1),
+      initialState: CountTimerState.reset,
+      interval: CountTimerInterval.milliseconds);
 
   void _incrementCounter() {
     setState(() {
@@ -78,41 +90,112 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+      body: CountTimer(
+          controller: _controller,
+          builder: (state, remaining) {
+            print('alo');
+            return Column(
+              children: [
+                Text("${state.name}", style: TextStyle(fontSize: 24.0)),
+                Text("${remaining.hours}:${remaining.minutes}:${remaining.seconds}.${remaining.milliseconds}",
+                    style: TextStyle(fontSize: 24.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RoundedButton(
+                      text: "Start",
+                      color: Colors.green,
+                      onPressed: () => _controller.start(),
+                    ),
+                    RoundedButton(
+                      text: "Pause",
+                      color: Colors.blue,
+                      onPressed: () => _controller.pause(),
+                    ),
+                    RoundedButton(
+                      text: "Reset",
+                      color: Colors.red,
+                      onPressed: () => _controller.reset(),
+                    )
+                  ],
+                ),
+                SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RoundedButton(
+                      text: "Set Begin to 5s",
+                      color: Colors.purple,
+                      onPressed: () => _controller.begin = Duration(seconds: 5),
+                    ),
+                    RoundedButton(
+                      text: "Set End to 5s",
+                      color: Colors.purple,
+                      onPressed: () => _controller.end = Duration(seconds: 5),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RoundedButton(
+                      text: "Jump to 5s",
+                      color: Colors.indigo,
+                      onPressed: () => _controller.jumpTo(Duration(seconds: 5)),
+                    ),
+                    RoundedButton(
+                      text: "Finish",
+                      color: Colors.orange,
+                      onPressed: () => _controller.finish(),
+                    )
+                  ],
+                ),
+                SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RoundedButton(
+                      text: "Add 5s",
+                      color: Colors.teal,
+                      onPressed: () => _controller.add(Duration(seconds: 5)),
+                    ),
+                    RoundedButton(
+                      text: "Subtract 5s",
+                      color: Colors.teal,
+                      onPressed: () => _controller.subtract(Duration(seconds: 5)),
+                    )
+                  ],
+                )
+              ],
+            );
+          }),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () => _controller.pause(),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class RoundedButton extends StatelessWidget {
+  final String text;
+  final Color color;
+  final void Function()? onPressed;
+
+  RoundedButton({required this.text, required this.color, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: Text(text, style: TextStyle(color: Colors.white)),
+      style: TextButton.styleFrom(
+        backgroundColor: color,
+        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      ),
+      onPressed: onPressed,
     );
   }
 }
