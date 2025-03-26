@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 extension ContextExtension on BuildContext {
-  Future<T> runTask<T>(Future<T> task, {Stream<double>? percent}) async {
-    var overlayEntry = OverlayEntry(builder: (context) => PageLoadingOverlay(percent: percent));
+  Future<T> runTask<T>(Future<T> task, {Widget? builder, Stream<double>? percent}) async {
+    var overlayEntry = OverlayEntry(builder: (context) => builder ?? PageLoadingOverlay(percent: percent));
     Overlay.of(this).insert(overlayEntry);
     try {
       final data = await task;
@@ -95,5 +95,52 @@ class LoadingPercentWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class PageOverlay extends StatefulWidget {
+  static const ROUTE_NAME = 'PageLoadingOverlay';
+
+  final Widget child;
+
+  PageOverlay({required this.child});
+
+  @override
+  _PageOverlayState createState() => _PageOverlayState();
+}
+
+class _PageOverlayState extends State<PageOverlay> {
+  @override
+  Widget build(BuildContext context) {
+    // developer.log('widget.percent: ${widget.percent}',
+    //     name: '_PageOverlayState');
+    return Container(
+        alignment: Alignment.center,
+        color: Colors.black26,
+        child: ClipRRect(
+          clipBehavior: Clip.hardEdge,
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+            child: widget.child,
+            // Container(
+            //   width: 80,
+            //   height: 80,
+            //   color: Theme.of(context).scaffoldBackgroundColor,
+            //   alignment: Alignment.center,
+            //   child: widget.percent == null
+            //       ? CupertinoActivityIndicator()
+            //       : StreamBuilder<double>(
+            //       stream: widget.percent,
+            //       builder: (context, snap) {
+            //         return Container(
+            //           width: 56,
+            //           height: 56,
+            //           child: LoadingPercentWidget(((snap.data ?? 0) * 100).toInt()),
+            //         );
+            //       }),
+            // ),
+          ),
+        ));
   }
 }
