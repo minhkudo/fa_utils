@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 // if (dart.library.js) 'dart:html';
 // import 'ui_fake.dart' if (dart.library.html) './real_ui.dart' as ui;
 
-class DynamicImageWidget extends StatefulWidget {
+class ImageWidget extends StatefulWidget {
   final String imageUrl;
   final String? semanticsLabel;
   final Color? color;
@@ -19,7 +19,7 @@ class DynamicImageWidget extends StatefulWidget {
   final WidgetBuilder? placeholderBuilder;
   final LoadingErrorWidgetBuilder? errorWidget;
 
-  const DynamicImageWidget({
+  const ImageWidget({
     Key? key,
     required this.imageUrl,
     this.height = 20,
@@ -34,10 +34,10 @@ class DynamicImageWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<DynamicImageWidget> createState() => _DynamicImageWidgetState();
+  State<ImageWidget> createState() => _ImageWidgetState();
 }
 
-class _DynamicImageWidgetState extends State<DynamicImageWidget> {
+class _ImageWidgetState extends State<ImageWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.imageUrl.startsWith("http")) {

@@ -1,3 +1,4 @@
+import 'package:fa_utils/utils/video/video_widget.dart';
 import 'package:fa_utils/view/gallery/gallery_view.dart';
 import 'package:fa_utils/view/gallery/media_selection_controller.dart';
 import 'package:fa_utils/view/time/count_time/count_timer.dart';
@@ -79,98 +80,101 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: CountTimer(
-          controller: _controller,
-          begin: Duration(seconds: 12),
-          end: Duration(seconds: 1),
-          autoStart: true,
-          builder: (state, remaining) {
-            return Column(
-              children: [
-                Text("${state.name}", style: TextStyle(fontSize: 24.0)),
-                Text("${remaining.hours}:${remaining.minutes}:${remaining.seconds}.${remaining.milliseconds}",
-                    style: TextStyle(fontSize: 24.0)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                      text: "Start",
-                      color: Colors.green,
-                      onPressed: () => _controller.start(),
-                    ),
-                    RoundedButton(
-                      text: "Pause",
-                      color: Colors.blue,
-                      onPressed: () => _controller.pause(),
-                    ),
-                    RoundedButton(
-                      text: "Reset",
-                      color: Colors.red,
-                      onPressed: () => _controller.reset(),
-                    )
-                  ],
-                ),
-                SizedBox(height: 12.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                      text: "Set Begin to 5s",
-                      color: Colors.purple,
-                      onPressed: () => _controller.begin = Duration(seconds: 5),
-                    ),
-                    RoundedButton(
-                      text: "Set End to 5s",
-                      color: Colors.purple,
-                      onPressed: () => _controller.end = Duration(seconds: 5),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                      text: "Jump to 5s",
-                      color: Colors.indigo,
-                      onPressed: () => _controller.jumpTo(Duration(seconds: 5)),
-                    ),
-                    RoundedButton(
-                      text: "Finish",
-                      color: Colors.orange,
-                      onPressed: () => _controller.finish(),
-                    )
-                  ],
-                ),
-                SizedBox(height: 12.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RoundedButton(
-                      text: "Add 5s",
-                      color: Colors.teal,
-                      onPressed: () => _controller.add(Duration(seconds: 5)),
-                    ),
-                    RoundedButton(
-                      text: "Subtract 5s",
-                      color: Colors.teal,
-                      onPressed: () => _controller.subtract(Duration(seconds: 5)),
-                    )
-                  ],
-                )
-              ],
-            );
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _controller.pause(),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      appBar: MediaQuery.of(context).orientation == Orientation.landscape
+          ? null
+          : AppBar(
+              // Here we take the value from the MyHomePage object that was created by
+              // the App.build method, and use it to set our appbar title.
+              title: Text(widget.title),
+            ),
+      body: VideoWidget(url: 'https://www.youtube.com/watch?v=TA7spPaVedk'),
+      // body: CountTimer(
+      //     controller: _controller,
+      //     begin: Duration(seconds: 12),
+      //     end: Duration(seconds: 1),
+      //     autoStart: true,
+      //     builder: (state, remaining) {
+      //       return Column(
+      //         children: [
+      //           Text("${state.name}", style: TextStyle(fontSize: 24.0)),
+      //           Text("${remaining.hours}:${remaining.minutes}:${remaining.seconds}.${remaining.milliseconds}",
+      //               style: TextStyle(fontSize: 24.0)),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //             children: [
+      //               RoundedButton(
+      //                 text: "Start",
+      //                 color: Colors.green,
+      //                 onPressed: () => _controller.start(),
+      //               ),
+      //               RoundedButton(
+      //                 text: "Pause",
+      //                 color: Colors.blue,
+      //                 onPressed: () => _controller.pause(),
+      //               ),
+      //               RoundedButton(
+      //                 text: "Reset",
+      //                 color: Colors.red,
+      //                 onPressed: () => _controller.reset(),
+      //               )
+      //             ],
+      //           ),
+      //           SizedBox(height: 12.0),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //             children: [
+      //               RoundedButton(
+      //                 text: "Set Begin to 5s",
+      //                 color: Colors.purple,
+      //                 onPressed: () => _controller.begin = Duration(seconds: 5),
+      //               ),
+      //               RoundedButton(
+      //                 text: "Set End to 5s",
+      //                 color: Colors.purple,
+      //                 onPressed: () => _controller.end = Duration(seconds: 5),
+      //               ),
+      //             ],
+      //           ),
+      //           SizedBox(height: 12.0),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //             children: [
+      //               RoundedButton(
+      //                 text: "Jump to 5s",
+      //                 color: Colors.indigo,
+      //                 onPressed: () => _controller.jumpTo(Duration(seconds: 5)),
+      //               ),
+      //               RoundedButton(
+      //                 text: "Finish",
+      //                 color: Colors.orange,
+      //                 onPressed: () => _controller.finish(),
+      //               )
+      //             ],
+      //           ),
+      //           SizedBox(height: 12.0),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //             children: [
+      //               RoundedButton(
+      //                 text: "Add 5s",
+      //                 color: Colors.teal,
+      //                 onPressed: () => _controller.add(Duration(seconds: 5)),
+      //               ),
+      //               RoundedButton(
+      //                 text: "Subtract 5s",
+      //                 color: Colors.teal,
+      //                 onPressed: () => _controller.subtract(Duration(seconds: 5)),
+      //               )
+      //             ],
+      //           )
+      //         ],
+      //       );
+      //     }),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => _controller.pause(),
+      //   tooltip: 'Increment',
+      //   child: const Icon(Icons.add),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
