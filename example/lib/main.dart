@@ -1,10 +1,4 @@
-import 'package:fa_utils/utils/video/video_widget.dart';
-import 'package:fa_utils/view/gallery/gallery_view.dart';
-import 'package:fa_utils/view/gallery/media_selection_controller.dart';
-import 'package:fa_utils/view/time/count_time/count_timer.dart';
-import 'package:fa_utils/view/time/count_time/count_timer_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,18 +15,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // This is the theme of your application.
         //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a purple toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
         // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: MyHomePage(
-        title: 'Count Time',
-      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -55,10 +54,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
-  late CountTimerController _controller = CountTimerController();
 
   void _incrementCounter() {
     setState(() {
@@ -80,122 +77,49 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: MediaQuery.of(context).orientation == Orientation.landscape
-          ? null
-          : AppBar(
-              // Here we take the value from the MyHomePage object that was created by
-              // the App.build method, and use it to set our appbar title.
-              title: Text(widget.title),
-            ),
-      body: VideoWidget(url: 'https://www.youtube.com/watch?v=TA7spPaVedk'),
-      // body: CountTimer(
-      //     controller: _controller,
-      //     begin: Duration(seconds: 12),
-      //     end: Duration(seconds: 1),
-      //     autoStart: true,
-      //     builder: (state, remaining) {
-      //       return Column(
-      //         children: [
-      //           Text("${state.name}", style: TextStyle(fontSize: 24.0)),
-      //           Text("${remaining.hours}:${remaining.minutes}:${remaining.seconds}.${remaining.milliseconds}",
-      //               style: TextStyle(fontSize: 24.0)),
-      //           Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //             children: [
-      //               RoundedButton(
-      //                 text: "Start",
-      //                 color: Colors.green,
-      //                 onPressed: () => _controller.start(),
-      //               ),
-      //               RoundedButton(
-      //                 text: "Pause",
-      //                 color: Colors.blue,
-      //                 onPressed: () => _controller.pause(),
-      //               ),
-      //               RoundedButton(
-      //                 text: "Reset",
-      //                 color: Colors.red,
-      //                 onPressed: () => _controller.reset(),
-      //               )
-      //             ],
-      //           ),
-      //           SizedBox(height: 12.0),
-      //           Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //             children: [
-      //               RoundedButton(
-      //                 text: "Set Begin to 5s",
-      //                 color: Colors.purple,
-      //                 onPressed: () => _controller.begin = Duration(seconds: 5),
-      //               ),
-      //               RoundedButton(
-      //                 text: "Set End to 5s",
-      //                 color: Colors.purple,
-      //                 onPressed: () => _controller.end = Duration(seconds: 5),
-      //               ),
-      //             ],
-      //           ),
-      //           SizedBox(height: 12.0),
-      //           Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //             children: [
-      //               RoundedButton(
-      //                 text: "Jump to 5s",
-      //                 color: Colors.indigo,
-      //                 onPressed: () => _controller.jumpTo(Duration(seconds: 5)),
-      //               ),
-      //               RoundedButton(
-      //                 text: "Finish",
-      //                 color: Colors.orange,
-      //                 onPressed: () => _controller.finish(),
-      //               )
-      //             ],
-      //           ),
-      //           SizedBox(height: 12.0),
-      //           Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //             children: [
-      //               RoundedButton(
-      //                 text: "Add 5s",
-      //                 color: Colors.teal,
-      //                 onPressed: () => _controller.add(Duration(seconds: 5)),
-      //               ),
-      //               RoundedButton(
-      //                 text: "Subtract 5s",
-      //                 color: Colors.teal,
-      //                 onPressed: () => _controller.subtract(Duration(seconds: 5)),
-      //               )
-      //             ],
-      //           )
-      //         ],
-      //       );
-      //     }),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => _controller.pause(),
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class RoundedButton extends StatelessWidget {
-  final String text;
-  final Color color;
-  final void Function()? onPressed;
-
-  RoundedButton({required this.text, required this.color, this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      child: Text(text, style: TextStyle(color: Colors.white)),
-      style: TextButton.styleFrom(
-        backgroundColor: color,
-        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
       ),
-      onPressed: onPressed,
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
