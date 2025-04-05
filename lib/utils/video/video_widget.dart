@@ -1,17 +1,17 @@
 // import 'package:appinio_video_player/appinio_video_player.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 // import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 //
-// class VideoWidget extends StatefulWidget {
-//   final String url;
+class VideoWidget extends StatefulWidget {
+  final String url;
+
+  VideoWidget({required this.url});
+
+  @override
+  _VideoWidgetState createState() => _VideoWidgetState();
+}
 //
-//   VideoWidget({required this.url});
-//
-//   @override
-//   _VideoWidgetState createState() => _VideoWidgetState();
-// }
-//
-// class _VideoWidgetState extends State<VideoWidget> {
+class _VideoWidgetState extends State<VideoWidget> {
 //   late CustomVideoPlayerController _customVideoPlayerController;
 //   late YoutubePlayerController _youtubeController;
 //
@@ -64,17 +64,18 @@
 //     super.dispose();
 //   }
 //
-//   @override
-//   Widget build(BuildContext context) {
-//     if (_isYouTube) {
-//       return YoutubePlayer(
-//         controller: _youtubeController,
-//         liveUIColor: Colors.red,
-//       );
-//     } else if (_isMP4) {
-//       return CustomVideoPlayer(customVideoPlayerController: _customVideoPlayerController);
-//     } else {
-//       return const Center(child: Text("Không nhận diện được loại video."));
-//     }
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox();
+    // if (_isYouTube) {
+    //   return YoutubePlayer(
+    //     controller: _youtubeController,
+    //     liveUIColor: Colors.red,
+    //   );
+    // } else if (_isMP4) {
+    //   return CustomVideoPlayer(customVideoPlayerController: _customVideoPlayerController);
+    // } else {
+    //   return const Center(child: Text("Không nhận diện được loại video."));
+    // }
+  }
+}
