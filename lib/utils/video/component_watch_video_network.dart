@@ -1,4 +1,6 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class ComponentWatchVideoNetwork extends StatefulWidget {
   static const ROUTE_NAME = 'ComponentWatchVideoNetwork';
@@ -13,40 +15,45 @@ class ComponentWatchVideoNetwork extends StatefulWidget {
 
 class _ComponentWatchVideoNetworkState extends State<ComponentWatchVideoNetwork> {
   static const TAG = 'ComponentWatchVideoNetwork';
-  // late PodPlayerController _podPlayerController;
+  late ChewieController _chewieController;
+  late VideoPlayerController _videoPlayerController;
 
   @override
   void initState() {
-    // _podPlayerController = PodPlayerController(
-    //   playVideoFrom: PlayVideoFrom.network(
-    //     widget.url,
-    //   ),
-    // )..initialise();
     super.initState();
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.url));
+
+    _videoPlayerController.initialize().then((_) => _videoPlayerController.addListener(() {
+          if (_videoPlayerController.value.position >= _videoPlayerController.value.duration &&
+              !_videoPlayerController.value.isPlaying) {
+            // Auto reset khi kết thúc
+            _videoPlayerController.seekTo(Duration.zero).then((_) => _videoPlayerController.play());
+          }
+        }));
+
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoInitialize: true,
+      showControls: true,
+      allowFullScreen: true,
+      allowMuting: true,
+      showControlsOnInitialize: false,
+      aspectRatio: _videoPlayerController.value.aspectRatio,
+    );
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    // _podPlayerController.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-    // return PodVideoPlayer(
-    //   controller: _podPlayerController,
-    //   podProgressBarConfig: const PodProgressBarConfig(
-    //     padding: EdgeInsets.only(
-    //       bottom: 20,
-    //       left: 20,
-    //       right: 20,
-    //     ),
-    //     playingBarColor: Colors.blue,
-    //     circleHandlerColor: Colors.blue,
-    //     backgroundColor: Colors.blueGrey,
-    //   ),
-    // );
+    return AspectRatio(
+      aspectRatio: _videoPlayerController.value.aspectRatio,
+      child: Chewie(controller: _chewieController),
+    );
   }
 }
