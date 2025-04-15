@@ -1,3 +1,4 @@
+import 'package:fa_utils/view/camera/camera_view.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -7,8 +8,11 @@ import 'media_tile.dart';
 class GalleryView extends StatefulWidget {
   final MediaSelectionController mediaSelectionController;
   final int size;
+  final bool enableCamera;
+  final Widget? camera;
 
-  const GalleryView({super.key, required this.mediaSelectionController, this.size = 36});
+  const GalleryView(
+      {super.key, required this.mediaSelectionController, this.size = 36, this.enableCamera = false, this.camera});
 
   @override
   State<GalleryView> createState() => _GalleryViewState();
@@ -47,16 +51,16 @@ class _GalleryViewState extends State<GalleryView> {
   }
 
   Future<void> requestPermission() async {
-    var permission = await PhotoManager.requestPermissionExtend();
-    if (!permission.isAuth) {
-      PhotoManager.openSetting();
-    } else {
+    PermissionState permission = await PhotoManager.requestPermissionExtend();
+    if (permission.isAuth) {
       List<AssetPathEntity> albums = await PhotoManager.getAssetPathList();
 
       setState(() {
         _albums = albums;
         _loading = false;
       });
+    } else {
+      PhotoManager.openSetting();
     }
   }
 
@@ -88,23 +92,51 @@ class _GalleryViewState extends State<GalleryView> {
       addAutomaticKeepAlives: true,
       shrinkWrap: true,
       padding: const EdgeInsets.all(8.0),
-      itemCount: _assets.length,
-      itemBuilder: (context, index) => Material(
-        child: InkWell(
-          onTap: () => setState(() => _mediaSelectionController.pickMedia(_assets[index])),
-          //pickMedia(_assets[index]),
-          child: Container(
-            decoration: BoxDecoration(
-              border: (_mediaSelectionController.isSelected(_assets[index]))
-                  ? Border.all(color: Colors.blue, width: 3)
-                  : null,
+      itemCount: _assets.length + (widget.enableCamera ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (widget.enableCamera && index == 0) {
+          return Material(
+            child: InkWell(
+              onTap: () async {
+                final asset = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => widget.camera ?? CameraView(), // màn hình camera bạn đã tạo
+                  ),
+                );
+
+                if (asset != null && asset is AssetEntity) {
+                  setState(() {
+                    _mediaSelectionController.pickMedia(asset);
+                    _assets.insert(0, asset); // thêm vào đầu danh sách
+                  });
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black87, width: 1),
+                ),
+                child: Icon(Icons.camera_alt, size: 40, color: Colors.grey),
+              ),
             ),
-            child: MediaTile(
-              assetEntity: _assets[index],
+          );
+        }
+
+        final actualIndex = widget.enableCamera ? index - 1 : index;
+        final asset = _assets[actualIndex];
+        final isSelected = _mediaSelectionController.isSelected(asset);
+        return Material(
+          child: InkWell(
+            onTap: () => setState(() => _mediaSelectionController.pickMedia(asset)),
+            child: Container(
+              decoration: BoxDecoration(
+                border: (isSelected) ? Border.all(color: Colors.blue, width: 3) : null,
+              ),
+              child: MediaTile(assetEntity: asset),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

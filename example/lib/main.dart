@@ -1,7 +1,18 @@
-import 'package:fa_utils/utils/video/component_watch_video_network.dart';
+import 'package:fa_utils/view/camera/camera_view.dart';
+import 'package:fa_utils/view/gallery/gallery_view.dart';
+import 'package:fa_utils/view/gallery/media_selection_controller.dart';
+import 'package:fa_utils/view/video/component_watch_video_youtube.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.blueAccent,
+    ),
+  );
+
   runApp(const MyApp());
 }
 
@@ -11,6 +22,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -87,8 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ComponentWatchVideoNetwork(
-        url: 'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+      body: ComponentWatchVideoYoutube(url: 'https://www.youtube.com/watch?v=j2xMGZ1XcMo',
+        // url: 'https://www.youtube.com/watch?v=48XgscozT-A',
       ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: _incrementCounter,
