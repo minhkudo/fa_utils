@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ImageWidget extends StatefulWidget {
+class ImageWidget extends StatelessWidget {
   final String imageUrl;
   final String? semanticsLabel;
   final Color? color;
@@ -14,8 +14,13 @@ class ImageWidget extends StatefulWidget {
   final WidgetBuilder? placeholderBuilder;
   final LoadingErrorWidgetBuilder? errorWidget;
 
+  // Optional visual features
+  final bool useFadeIn;
+  final double borderRadius;
+  final bool isCircle;
+
   const ImageWidget({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.height = 20,
     this.width = 20,
@@ -26,103 +31,89 @@ class ImageWidget extends StatefulWidget {
     this.alignment = Alignment.center,
     this.placeholderBuilder,
     this.errorWidget,
-  }) : super(key: key);
+    this.useFadeIn = false,
+    this.borderRadius = 0,
+    this.isCircle = false,
+  });
 
-  @override
-  State<ImageWidget> createState() => _ImageWidgetState();
-}
-
-class _ImageWidgetState extends State<ImageWidget> {
   @override
   Widget build(BuildContext context) {
-    if (widget.imageUrl.startsWith("http")) {
-      //web and image not coming from firebase
-      // if (Application.isWeb() && !widget.imageUrl.contains("firebase")) {
-      //   ui.platformViewRegistry.registerViewFactory(
-      //       widget.imageUrl,
-      //       (int viewId) => ImageElement()
-      //         ..src = widget.imageUrl
-      //         ..style?.width = '100%' //or '0%'-'100%'
-      //         ..style?.height = '100%');
-      //   return SizedBox(width: widget.width, height: widget.height, child: HtmlElementView(viewType: widget.imageUrl));
-      // } else {
-      return widget.imageUrl.contains('.svg')
-          ? Padding(
-              padding: widget.padding!,
-              child: SvgPicture.network(widget.imageUrl,
-                  width: widget.width,
-                  height: widget.height,
-                  color: widget.color,
-                  semanticsLabel: widget.semanticsLabel,
-                  placeholderBuilder: widget.placeholderBuilder ?? buildPlaceholder),
-            )
-          : Padding(
-              padding: widget.padding!,
-              child: CachedNetworkImage(
-                width: widget.width,
-                height: widget.height,
-                imageUrl: widget.imageUrl,
-                placeholder: (context, url) {
-                  if (widget.placeholderBuilder != null) {
-                    return widget.placeholderBuilder!(context);
-                  } else {
-                    return buildPlaceholder(context, url: url);
-                  }
-                },
-                errorWidget: widget.errorWidget ?? buildErrorWidget,
-                fit: widget.fit,
-                color: widget.color,
-              ),
-            );
-      // }
+    final content = _buildImage(context);
+    final padded = Padding(padding: padding ?? EdgeInsets.zero, child: content);
+
+    if (isCircle) {
+      return ClipOval(child: padded);
+    } else if (borderRadius > 0) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: padded,
+      );
     } else {
-      // Local file path
-      if (widget.imageUrl.endsWith(".svg")) {
-        // SVG image
-        return Padding(
-          padding: widget.padding!,
-          child: SvgPicture.asset(
-            widget.imageUrl,
-            width: widget.width,
-            height: widget.height,
-            color: widget.color,
-            placeholderBuilder: widget.placeholderBuilder ?? buildPlaceholder,
-            fit: widget.fit ?? BoxFit.contain,
-            semanticsLabel: widget.semanticsLabel,
-          ),
+      return padded;
+    }
+  }
+
+  Widget _buildImage(BuildContext context) {
+    if (imageUrl.startsWith("http")) {
+      if (imageUrl.contains(".svg")) {
+        return SvgPicture.network(
+          imageUrl,
+          width: width,
+          height: height,
+          color: color,
+          semanticsLabel: semanticsLabel,
+          placeholderBuilder: placeholderBuilder ?? _buildPlaceholder,
         );
       } else {
-        // Other image formats (PNG, JPEG, etc.)
-        return Padding(
-          padding: widget.padding!,
-          child: Image.asset(
-            widget.imageUrl,
-            width: widget.width,
-            height: widget.height,
-            fit: widget.fit,
-            color: widget.color,
-            semanticLabel: widget.semanticsLabel,
-          ),
+        return CachedNetworkImage(
+          imageUrl: imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          color: color,
+          placeholder: (context, url) =>
+          placeholderBuilder?.call(context) ?? _buildPlaceholder(context),
+          errorWidget: errorWidget ?? _buildErrorWidget,
+          fadeInDuration: useFadeIn ? const Duration(milliseconds: 300) : Duration.zero,
+        );
+      }
+    } else {
+      if (imageUrl.endsWith(".svg")) {
+        return SvgPicture.asset(
+          imageUrl,
+          width: width,
+          height: height,
+          color: color,
+          fit: fit ?? BoxFit.contain,
+          semanticsLabel: semanticsLabel,
+          placeholderBuilder: placeholderBuilder ?? _buildPlaceholder,
+        );
+      } else {
+        return Image.asset(
+          imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          color: color,
+          semanticLabel: semanticsLabel,
         );
       }
     }
   }
 
-  Widget buildErrorWidget(BuildContext context, String url, dynamic error) {
-    return Container(
-      height: widget.width,
-      width: widget.height,
-      alignment: Alignment.center,
-      child: const Icon(Icons.error),
+  Widget _buildPlaceholder(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 
-  Widget buildPlaceholder(BuildContext context, {String? url}) {
-    return Container(
-      height: widget.width,
-      width: widget.height,
-      alignment: Alignment.center,
-      child: const CircularProgressIndicator(),
+  Widget _buildErrorWidget(BuildContext context, String url, dynamic error) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: const Center(child: Icon(Icons.error)),
     );
   }
 }
