@@ -1,7 +1,4 @@
-import 'package:fa_utils/view/camera/camera_view.dart';
-import 'package:fa_utils/view/gallery/gallery_view.dart';
-import 'package:fa_utils/view/gallery/media_selection_controller.dart';
-import 'package:fa_utils/view/video/component_watch_video_youtube.dart';
+import 'package:fa_utils/view/video/video_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -99,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ComponentWatchVideoYoutube(url: 'https://www.youtube.com/watch?v=j2xMGZ1XcMo',
+      body: VideoWidget(url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
         // url: 'https://www.youtube.com/watch?v=48XgscozT-A',
       ),
       // floatingActionButton: FloatingActionButton(

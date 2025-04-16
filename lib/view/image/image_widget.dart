@@ -2,11 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-// import 'package:prodigy/src/app/application.dart';
-// import 'package:prodigy/src/utils/js_stub.dart'
-// if (dart.library.js) 'dart:html';
-// import 'ui_fake.dart' if (dart.library.html) './real_ui.dart' as ui;
-
 class ImageWidget extends StatefulWidget {
   final String imageUrl;
   final String? semanticsLabel;

@@ -1,12 +1,12 @@
-import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:last_pod_player/last_pod_player.dart';
 
 class ComponentWatchVideoNetwork extends StatefulWidget {
   static const ROUTE_NAME = 'ComponentWatchVideoNetwork';
 
   final String url;
 
-  const ComponentWatchVideoNetwork({Key? key, required this.url}) : super(key: key);
+  const ComponentWatchVideoNetwork({super.key, required this.url});
 
   @override
   _ComponentWatchVideoNetworkState createState() => _ComponentWatchVideoNetworkState();
@@ -14,30 +14,33 @@ class ComponentWatchVideoNetwork extends StatefulWidget {
 
 class _ComponentWatchVideoNetworkState extends State<ComponentWatchVideoNetwork> {
   static const TAG = 'ComponentWatchVideoNetwork';
-  late BetterPlayerController _betterPlayerController;
+  late final PodPlayerController controller;
+  bool isLoading = true;
 
   @override
   void initState() {
-    _betterPlayerController = BetterPlayerController(
-      BetterPlayerConfiguration(),
-      betterPlayerDataSource: BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        widget.url,
-      ),
-    );
+    loadVideo(widget.url);
     super.initState();
+  }
+
+  void loadVideo(String url) async {
+    setState(() => isLoading = false);
+    controller = PodPlayerController(
+      playVideoFrom: PlayVideoFrom.network(url),
+      podPlayerConfig: const PodPlayerConfig(
+        videoQualityPriority: [360],
+      ),
+    )..initialise();
   }
 
   @override
   void dispose() {
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: BetterPlayer(controller: _betterPlayerController),
-    );
+    return isLoading ? const Center(child: CircularProgressIndicator()) : PodVideoPlayer(controller: controller);
   }
 }
