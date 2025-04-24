@@ -30,6 +30,7 @@ class _ComponentWatchVideoYoutubeState extends State<ComponentWatchVideoYoutube>
     controller = PodPlayerController(
       playVideoFrom: PlayVideoFrom.networkQualityUrls(videoUrls: urls!),
       podPlayerConfig: const PodPlayerConfig(
+        autoPlay: false,
         videoQualityPriority: [360],
       ),
     )..initialise();

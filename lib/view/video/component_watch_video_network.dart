@@ -28,6 +28,7 @@ class _ComponentWatchVideoNetworkState extends State<ComponentWatchVideoNetwork>
     controller = PodPlayerController(
       playVideoFrom: PlayVideoFrom.network(url),
       podPlayerConfig: const PodPlayerConfig(
+        autoPlay: false,
         videoQualityPriority: [360],
       ),
     )..initialise();
