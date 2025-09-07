@@ -18,6 +18,7 @@ dependencies:
   photo_manager: ^3.6.4
   photo_manager_image_provider: ^2.2.0
   last_pod_player: ^0.0.6
+  either_dart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
