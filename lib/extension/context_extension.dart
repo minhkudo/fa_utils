@@ -6,6 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 extension ContextExtension on BuildContext {
+  Size get size => MediaQuery.of(this).size;
+
+  double get width => size.width;
+
+  double get height => size.height;
+
   Future<T> runTask<T>(Future<T> task, {Widget? builder, Stream<double>? percent}) async {
     var overlayEntry = OverlayEntry(builder: (context) => builder ?? PageLoadingOverlay(percent: percent));
     Overlay.of(this).insert(overlayEntry);
